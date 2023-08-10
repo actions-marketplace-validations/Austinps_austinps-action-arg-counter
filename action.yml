@@ -1,48 +1,24 @@
-name: 'Argument Counter'
-description: 'Count # of arguments passed in'
-inputs:
-  arguments-to-count: # input id
-    description: 'arguments to count'
-    required: true
-    default: ''
-outputs:
-  arg-count:
-    description: "Count of arguments passed in"
-    value: ${{ steps.return-result.outputs.num-args }}
+name: 'License Check Actions'
+description: 'display invalid licenses'
 runs:
   using: "composite"
   steps:
-    - name: Print arguments if any
-      run: |
-        echo Arguments: ${{ inputs.arguments-to-count }}.
-      shell: bash
-    - id: return-result
-      run: |
-        chmod +x ${{ github.action_path }}/count-args.sh
-        echo "num-args=`${{ github.action_path }}/count-args.sh ${{ inputs.arguments-to-count }}`" >> $GITHUB_STEP_SUMMARY
-      shell: bash
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v2
       with:
         python-version: "3.10"
-      shell: bash
     - name: Install dependencies
       run: pip install -r requirements.txt
-      shell: bash
     - name: Install license checker library
       run: pip install pip-licenses
-      shell: bash
     - name: Run license check on dependencies
-      run: pip-licenses  --format=csv --with-urls --no-version --output-file=licenses.csv
-      shell: bash
+      run: pip-licenses --format=csv --with-urls --no-version --output-file=licenses.csv
     - name: Check for restricted licenses
       run: |
         chmod +x scripts/license_check.sh
         scripts/license_check.sh licenses.csv
-      shell: bash
     - name: Show status of all licenses
       run: |
         chmod +x scripts/show_license.sh
         scripts/show_license.sh licenses.csv
-      shell: bash
-      if: always()
+
