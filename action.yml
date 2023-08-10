@@ -21,3 +21,22 @@ runs:
         chmod +x ${{ github.action_path }}/count-args.sh
         echo "num-args=`${{ github.action_path }}/count-args.sh ${{ inputs.arguments-to-count }}`" >> $GITHUB_STEP_SUMMARY
       shell: bash
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Install license checker library
+      run: pip install pip-licenses
+    - name: Run license check on dependencies
+      run: pip-licenses  --format=csv --with-urls --no-version --output-file=licenses.csv
+    - name: Check for restricted licenses
+      run: |
+        chmod +x scripts/license_check.sh
+        scripts/license_check.sh licenses.csv
+    - name: Show status of all licenses
+      run: |
+        chmod +x scripts/show_license.sh
+        scripts/show_license.sh licenses.csv
+      if: always()
