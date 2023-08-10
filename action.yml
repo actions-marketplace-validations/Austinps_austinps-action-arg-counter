@@ -25,18 +25,24 @@ runs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+      shell: bash
     - name: Install dependencies
       run: pip install -r requirements.txt
+      shell: bash
     - name: Install license checker library
       run: pip install pip-licenses
+      shell: bash
     - name: Run license check on dependencies
       run: pip-licenses  --format=csv --with-urls --no-version --output-file=licenses.csv
+      shell: bash
     - name: Check for restricted licenses
       run: |
         chmod +x scripts/license_check.sh
         scripts/license_check.sh licenses.csv
+      shell: bash
     - name: Show status of all licenses
       run: |
         chmod +x scripts/show_license.sh
         scripts/show_license.sh licenses.csv
+      shell: bash
       if: always()
