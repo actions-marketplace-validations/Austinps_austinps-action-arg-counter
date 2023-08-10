@@ -18,7 +18,6 @@ runs:
       shell: bash
     - id: return-result
       run: |
-        touch count-args.sh
-        chmod +x count-args.sh
+        chmod +x ${{ github.action_path }}/count-args.sh
         echo "num-args=`${{ github.action_path }}/count-args.sh ${{ inputs.arguments-to-count }}`" >> $GITHUB_OUTPUT
       shell: bash
