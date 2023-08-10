@@ -19,5 +19,5 @@ name: 'Argument Counter'
      - id: return-result
        run: |
          echo "num-args=`${{ github.action_path }}/count-args.sh
- ${{ inputs.arguments-to-count }}`" >> $GITHUB_OUTPUT
+ ${{ inputs.arguments-to-count }}`" >> $GITHUB_STEP_SUMMARY
       shell: bash
